@@ -7,8 +7,6 @@ object FunctionDemo3 {
     sayhello _ //方法加" _"可以转成函数
     println(f1(3, 6))
     println(f2(6, 2))
-    println(addall(1, 2, 3, 4, 5, 6))
-
     println("************")
 
     //方法的传值调用和传名调用
@@ -25,14 +23,6 @@ object FunctionDemo3 {
   val f2: (Int, Int) => Int = (x, y) => x + 2 * y //定义函数（第二种）
 
   def add(x: Int, y: Int): Int = x + y //def定义方法，然后是方法名，参数，返回值类型，然后是方法体
-
-  def addall(x: Int*) = { //定义可变参数函数
-    var sum = 0
-    for (i <- x) {
-      sum += i
-    }
-    sum
-  }
 
   def sayhello = println("hello my name is xxx") //定义无参数的方法，可以不写括号
 
@@ -65,5 +55,5 @@ object FunctionDemo3 {
     f(x, y)
   }
 
-  def add2(x: Int, y: Int) = x * 2 + y  //定义一个函数，用于传入add3
+  def add2(x: Int, y: Int) = x * 2 + y //定义一个函数，用于传入add3
 }
