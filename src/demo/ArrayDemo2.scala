@@ -1,6 +1,6 @@
 package demo
 
-object ArrayDemo {
+object ArrayDemo2 {
   def main(args: Array[String]): Unit = {
 
     /**

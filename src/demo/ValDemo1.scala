@@ -1,6 +1,6 @@
 package demo
 
-object ValDemo {
+object ValDemo1 {
   def main(args: Array[String]): Unit = {
     println("hello,this is my first scala")
 
