@@ -7,13 +7,13 @@ object FunctionDemo3 {
     sayhello _ //方法加" _"可以转成函数
     println(f1(3, 6))
     println(f2(6, 2))
-    println("************")
+    Helper.printlnSplit()
 
     //方法的传值调用和传名调用
     printByValue(count())
-    println("************")
+    Helper.printlnSplit()
     printByName(count)
-    println("************")
+    Helper.printlnSplit()
     //高阶函数
     println(add3(add2, 3, 3))
   }

@@ -11,7 +11,7 @@ object ArrayDemo2 {
     for (ele <- arr) {
       println(ele)
     }
-    println("*********************")
+    Helper.printlnSplit()
     //使用角标遍历
     /*
         var index = 0 to 7 //Array(0, 1, 2, 3, 4, 5, 6, 7)
@@ -22,25 +22,25 @@ object ArrayDemo2 {
     for (ele <- 0 to 7) { //0 until 8 左闭右开
       println(arr(ele))
     }
-    println("*********************")
+    Helper.printlnSplit()
 
     for (ele <- 0 until arr.length) { //0 until 8 左闭右开
       println(arr(ele))
     }
 
-    println("*********************")
+    Helper.printlnSplit()
 
     /**
       * 获取数组中的偶数
       */
     for (ele <- arr if (ele % 2 == 0)) println(ele)
-    println("*********************")
+    Helper.printlnSplit()
 
     /**
       * 双层for循环,分号不能省略
       */
     for (i <- 1 to 3; j <- 1 to 3; if i != j) println(10 * i + j)
-    println("*********************")
+    Helper.printlnSplit()
 
     //yield迭代器
     var datas = for (i <- 1 to 3; j <- 1 to 3; if i != j) yield 10 * i + j

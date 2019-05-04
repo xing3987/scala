@@ -24,14 +24,14 @@ object ArrayDemo4 {
     arr2(2) = "c"
     arr2(3) = "d"
     println(arr2.toBuffer)
-    println("*************")
+    Helper.printlnSplit()
 
     //数组的操作,arr经过map操作后会返回一个新的数组
     println(arr.map((x: Int) => x + 1).toBuffer)
     //简化
     println(arr.map(x => x + 1).toBuffer)
     println(arr.map(_ + 1).toBuffer)
-    println("*************")
+    Helper.printlnSplit()
     //map|flatten|flatMap|foreach 方法的使用
     var arr3 = Array("hello my name is marry", "hello marry I am lily")
     println(arr3.toBuffer)
@@ -44,7 +44,7 @@ object ArrayDemo4 {
     //foreach遍历
     arr3.flatMap(_.split(" ")).foreach(println)
     arr5.foreach(println(_))
-    println("*************")
+    Helper.printlnSplit()
 
     //worldcount
     val tomap = arr3.flatMap(_.split(" ")).groupBy(x => x) //通过每个元素分组

@@ -13,7 +13,7 @@ object FunctionDemo5 {
     println(addtwo())
     println(addtwo(10)) //默认覆盖第一个参数
     println(addtwo(y = 8)) //指定覆盖参数
-    println("*********")
+    Helper.printlnSplit()
 
     //高阶函数：将其他函数作为参数，或者结果是函数的函数
     println(tostring(layout, 1))
@@ -23,7 +23,7 @@ object FunctionDemo5 {
     def logbound = log(new Date(), _: String)
 
     logbound("hello...")
-    println("*********")
+    Helper.printlnSplit()
 
     //柯里化(Currying)
     println(curry(1)(2))
