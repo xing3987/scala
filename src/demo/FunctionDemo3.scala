@@ -1,5 +1,8 @@
 package demo
 
+/**
+  * 方法对多可以传递22个参数
+  */
 object FunctionDemo3 {
   def main(args: Array[String]): Unit = {
     println(add(1, 3))

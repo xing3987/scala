@@ -94,7 +94,8 @@ object CollectionDemo6 {
 
     //fold叠加运算，如果是right就把初始值放到右边，然后从右边开始计数；默认是放左边从左开始运算
     var list7 = Array(1, 3, 5)
-    println(list7.fold(1)(_ + _)) //第一个参数是初始值，第二个参数是运算规则 (((1+1)+3)+5)默认是从左边开始加
+    println(list7.fold(1)(_ + _)) //(arrayy要是单参数的集合(1,2,3,4))第一个参数是初始值，第二个参数是运算规则 (((1+1)+3)+5)默认是从左边开始加
+    println(list7.foldLeft(1)(_ + _)) //array有多个参数时用foldleft:((1,2),(3,4))
     println(list7.foldRight(1)(_ - _)) //1-(3-(5-1))从右边开始计算
 
     println(list3.union(list7)) //并集

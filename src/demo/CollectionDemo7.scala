@@ -27,6 +27,8 @@ object CollectionDemo7 {
     map1 -= "spark"
     map1.remove("hive")
     println(map1)
+    val map2 = Map[String, Int]("a" -> 2) //直接定义map
+    println(map2)
     Helper.printlnSplit()
 
     //元组(tuple)，可以对指定序号的角标操作
@@ -40,5 +42,12 @@ object CollectionDemo7 {
     // 交换元组的元素位置
     val swap = tuple2.swap
     println(swap)
+
+    //reduce聚合
+    var arr = Array(("a", 2), ("b", 3), ("c", 2))
+    println(arr.reduce((x, y) => (x._1, x._2 + y._2)))  //reduce默认x._1结果是第一个值
+
+    var arr1 = Array("hello my name is marry", "hello marry I am lily")
+    println(arr1.flatMap(_.split(" ")).map(x => (x, 1)).groupBy(x => x._1).mapValues(t => t.foldLeft(0)(_ + _._2)))
   }
 }
