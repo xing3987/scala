@@ -89,7 +89,28 @@ object CollectionDemo6 {
     println(list6.sortWith((x, y) => -x._1 > y._1).toBuffer) //自定义排序规则，按照第一个元素大小排序
     println(list3.sortWith((x, y) => x > y)) //自定义降序排列
 
-    println(list3.grouped(2).toBuffer)  //grouped按照个数分组
-    
+    println(list3.grouped(2).toBuffer) //grouped按照个数分组
+    Helper.printlnSplit()
+
+    //fold叠加运算，如果是right就把初始值放到右边，然后从右边开始计数；默认是放左边从左开始运算
+    var list7 = Array(1, 3, 5)
+    println(list7.fold(1)(_ + _)) //第一个参数是初始值，第二个参数是运算规则 (((1+1)+3)+5)默认是从左边开始加
+    println(list7.foldRight(1)(_ - _)) //1-(3-(5-1))从右边开始计算
+
+    println(list3.union(list7)) //并集
+    println(list3.intersect(list7)) //交集
+    println(list3.diff(list7)) //差集
+
+    var list8 = list3.zip(list7) //除zip把两个集合对应角标的位置组成新的list,多出来的直接去
+    println(list8)
+    var list9 = list8.map(x => x._1 + x._2)
+    println(list9)
+
+    println(list9.mkString("-")) //转成字符串，添加拼接符
+    println(list9.sum)
+    println(list3.length)
+    println(list3)
+    println(list3.slice(3, list3.length)) //集合的截取，不含前，含后
+    println(list3.slice(5, list3.length).map(_ * 10)) //去数组的第五个开始到结束每个乘以10
   }
 }
