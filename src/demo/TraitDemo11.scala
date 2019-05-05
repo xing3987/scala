@@ -6,7 +6,7 @@ package demo
   */
 trait TraitDemo11 {
 
-  val name: String = "lily"
+  val name: String //trait可以定义变量，不给值，继承是必须重写
 
   def sayhello(): Unit
 
@@ -36,6 +36,7 @@ object TraitImpl extends TraitDemo11 {
     //也可以在定义的时候在类后面: with+特质
     val student10 = new Student10("tom") with TraitDemo11 {
       override def sayhello(): Unit = {}
+      override val name: String = "jim"
     }
 
     student10.sayBye(student10.name)
