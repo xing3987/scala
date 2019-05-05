@@ -1,5 +1,9 @@
 package demo
 
+/**
+  * object与class区别：不能new成对象
+  * 含有默认初始化方法apply()
+  */
 object ValDemo1 {
   def main(args: Array[String]): Unit = {
     println("hello,this is my first scala")
