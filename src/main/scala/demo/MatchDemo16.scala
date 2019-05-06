@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 模式匹配，匹配顺序是从上到下一次匹配

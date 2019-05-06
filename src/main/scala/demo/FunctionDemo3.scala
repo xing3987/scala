@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 方法对多可以传递22个参数

@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * scala的方法和变量都是静态的

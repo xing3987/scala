@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 object TypeDemo13 {
   type S = String //定义一个类型S 是String类型

@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 特质，相当与interface

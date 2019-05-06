@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 抽象类，同java,抽象类只能使用extends，但是trait可以使用with

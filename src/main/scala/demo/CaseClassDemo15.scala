@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 样例类case class支持模式匹配，默认实现了serializable接口

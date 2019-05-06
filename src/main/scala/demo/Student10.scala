@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 定义一个私有的类,只能在当前包下才可以访问(java->protect)

@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 trait TypeTrait14 {
   type T

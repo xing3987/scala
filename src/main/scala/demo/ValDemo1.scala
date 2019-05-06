@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * object与class区别：不能new成对象

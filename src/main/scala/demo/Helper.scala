@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 object Helper {
   def printlnSplit(): Unit = {

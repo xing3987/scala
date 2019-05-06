@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 object ArrayDemo2 {
   def main(args: Array[String]): Unit = {

@@ -1,4 +1,4 @@
-package scala.demo
+package demo
 
 /**
   * 定义一个类，有个空参数构造方法
