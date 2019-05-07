@@ -13,7 +13,7 @@ class TwoActor extends Actor {
     case "你好呀" => {
       Thread.sleep(1000)
       println(this.getClass + "你也好")
-      sender() ! "你也好"
+      sender() ! "你也好"  //sender()默认回复消息给发送者
     }
     case "大家好才是真的好" => {
       println(this.getClass + "我们都是好盆友")
