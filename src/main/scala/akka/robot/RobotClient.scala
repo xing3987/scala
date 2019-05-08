@@ -21,10 +21,12 @@ class RobotClient extends Actor {
 
   override def receive: Receive = {
     case "start" => println("client begin..")
-    case msg: String => {
+    case ServerMessage(msg) => {
       //输出所有收到的信息
-      println(msg)
-      selection ! msg
+      println("server:" + msg)
+    }
+    case ClientMessage(msg) => {
+      selection ! ClientMessage(msg)
     }
   }
 }
@@ -62,7 +64,7 @@ object RobotClient {
     //客户端发送消息，从console中得到
     while (true) {
       val str = StdIn.readLine() //按行读取用户在console的输入内容
-      robotclient ! str
+      robotclient ! ClientMessage(str)
     }
   }
 }
