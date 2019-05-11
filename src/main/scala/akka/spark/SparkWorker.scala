@@ -23,12 +23,20 @@ class SparkWorker(masterUrl: String) extends Actor {
     case "start" => {
       println("work begin..")
       selection ! RegisterWorkerInfo(new WorkInfo(workId, "4", "1024*32"))
-      //启动后定时给服务器发送心跳
+    }
+
+    case RegisteredWorkerInfo => {
+      //收到服务器发来的注册成功信息，启动定时给服务器发送心跳的任务
       import context.dispatcher // 使用调度器时候必须导入dispatcher
       context.system.scheduler.schedule(0 millis, 3000 millis, self, SendHeartBeat)
     }
+
     //给服务器发送心跳
-    case SendHeartBeat => selection ! HeartBeat(workId)
+    case SendHeartBeat => {
+      // 开始向master发送心跳了
+      println(s"------- $workId 发送心跳-------")
+      selection ! HeartBeat(workId)
+    }
   }
 }
 
