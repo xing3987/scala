@@ -11,7 +11,7 @@ class SparkMaster extends Actor {
   var maps = HashMap[String, WorkInfo]()
 
   override def receive: Receive = {
-    case start => println("spark master start...")
+    case "start" => println("spark master start...")
 
     case RegisterWorkerInfo(workinfo) => {
       maps += ((workinfo.id, workinfo)) //把传递来的workinfo信息保存到maps中
@@ -19,14 +19,14 @@ class SparkMaster extends Actor {
       sender() ! RegisteredWorkerInfo // 此时worker会收到注册成功消息
     }
     // worker给master发送心跳信息
-    case HearBeat(id) => {
+    case HeartBeat(id) => {
       //遍历maps，更新worker的最后一次心跳信息
       maps(id).lastHeartBeatTime = System.currentTimeMillis()
     }
 
     //收到确认worker的消息，启动schedule定时检查worker的生存状态，删除失效worker
     case CheckTimeOutWorker => {
-      //import context.dispatcher // 使用调度器时候必须导入dispatcher
+      import context.dispatcher // 使用调度器时候必须导入dispatcher
       //定义一个调度器每6秒执行一次，移除死亡的worker
       context.system.scheduler.schedule(0 millis, 6000 millis, self, RemoveTimeOutWorker)
     }
@@ -47,7 +47,7 @@ class SparkMaster extends Actor {
 object SparkMaster {
   def main(args: Array[String]): Unit = {
 
-    if (args.length <= 3) {
+    if (args.length < 3) {
       println(
         """
           |请输入参数：<host> <port> <masterName>
