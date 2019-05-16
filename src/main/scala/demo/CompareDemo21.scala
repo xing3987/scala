@@ -10,6 +10,13 @@ object CompareDemo21 {
     override def compare(that: Boxs): Int = b.size - that.size
   }
 
+  //定义一个隐式转换的方法，让Boxs实现Ordered接口
+/*  implicit def boxs2Ordering(b: Boxs) = new Ordering[Boxs] {
+    override def compare(that: Boxs): Int = {
+      b.size - that.size
+    }
+  }*/
+
   def main(args: Array[String]): Unit = {
     val a = 1
     val b = 2
@@ -22,7 +29,7 @@ object CompareDemo21 {
 
     println(new Cmp(box1, box2).bigger)
 
-    println(new Cmp2(box1, box2).bigger)
+    //println(new Cmp2(box1, box2).bigger)
   }
 }
 
@@ -48,15 +55,15 @@ class Cmp[T <% Ordered[T]](o1: T, o2: T) {
   def bigger = if (o1 > o2) o1 else o2
 }
 
-//使用scala比较器ordered,Ordering
-class Cmp2[T : Ordered[T]](o1: T, o2: T) {
+//使用scala比较器Ordering
+/*class Cmp2[T : Ordering[T]](o1: T, o2: T) {
 
   //因为o1,o2都实现了comparable接口所以他们是可以比较的
   def bigger = {
     val cmptor=implicitly[Ordering[T]]  //从上下文中获得比较器
     if(cmptor.compare(o1,o2)>0) o1 else o2
   }
-}
+}*/
 
 class Boxs(val size: Int) {
   override def toString = s"Box($size)"
