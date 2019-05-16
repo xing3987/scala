@@ -8,7 +8,7 @@ import org.apache.spark.{SparkConf, SparkContext}
   */
 object WorldCount {
   def main(args: Array[String]): Unit = {
-    //创建spark配置，设置应用程序名字,设置本地运行
+    //创建spark配置，设置应用程序名字,设置本地运行以及默认的分区数
     //val conf = new SparkConf().setAppName("WorldCount")
     val conf = new SparkConf().setAppName("WorldCount").setMaster("local[2]")
     //创建spark执行的入口
