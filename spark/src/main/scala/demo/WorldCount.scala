@@ -4,7 +4,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * 在spark中运行（去掉setMaster(**),放开读取和存储路径）
-  * /data/spark-2.3.3# bin/spark-submit --master spark://hadoop001:7077 --class demo.WorldCount /data/sparkDemo.jar hdfs://hadoop001:9000/wordCount.txt hdfs://hadoop001:9000/wordCount
+  * --executor-memory 2048mb：指定使用内存数; --total-executor-cores：指定使用计数核数
+  * --master spark://hadoop001:7077：指定master地址;--class demo.WorldCount /data/sparkDemo.jar:指定main方法的类和存在于那个jar包
+  * hdfs://hadoop001:9000/wordCount.txt hdfs://hadoop001:9000/wordCount:传入main的参数arg(0),arg(1)分别为hdfs中的路径
+  * /data/spark-2.3.3# bin/spark-submit --master spark://hadoop001:7077  --executor-memory 2048mb --total-executor-cores 12 --class demo.WorldCount /data/sparkDemo.jar hdfs://hadoop001:9000/wordCount.txt hdfs://hadoop001:9000/wordCount
   */
 object WorldCount {
   def main(args: Array[String]): Unit = {
