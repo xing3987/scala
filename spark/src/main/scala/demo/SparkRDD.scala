@@ -6,7 +6,8 @@ import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 import scala.collection.mutable.ListBuffer
 
 object SparkRDD {
-
+  //指定分区的方式local[n],n是几，分区就是几个。local[*]表示通过cpu核数得到相同的分区数
+  //sc.parallelize(list，n)n是几，分区就是几个
   val conf = new SparkConf().setAppName("SparkRDD").setMaster("local[2]")
   val sc = new SparkContext(conf)
   val list = List("tom", "davy", "lucy", "tom")
