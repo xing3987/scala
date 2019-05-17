@@ -43,8 +43,12 @@ object SparkRDD {
     repartitiondm
     repartitionAndSortWithinPartitionsdm
 
-    sortByKeydn*/
-    aggregateByKeydm
+    sortByKeydn
+    aggregateByKeydm*/
+
+    rdd.top(3).foreach(println)//排序取最前三个
+    rdd.take(3).foreach(println) //取list的前三个
+    rdd.takeOrdered(3).foreach(println) //排序取最前三个
   }
 
   //aggregateByKey函数对PairRDD中相同Key的值进行聚合操作，在聚合过程中同样使用了一个中立的初始值
