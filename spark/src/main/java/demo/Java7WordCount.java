@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class Java7WordCount {
     public static void main(String[] args) {
-        //创建spark配置，设置应用程序名字,设置本地运行以及默认的分区数
+        //创建spark配置，设置应用程序名字,设置本地运行以及默认的分区数,生成几个task(最后有几个文件)
         //SparkConf conf = new SparkConf().setAppName("Java7WordCount")
         SparkConf conf = new SparkConf().setAppName("Java7WordCount").setMaster("local[1]");
         //创建sparkContext
