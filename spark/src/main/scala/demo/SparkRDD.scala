@@ -5,6 +5,17 @@ import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 
 import scala.collection.mutable.ListBuffer
 
+/**
+  * action方法，会立即发task执行,在worker(executor)端执行(结果也在executor中),如下
+  * aggregate
+  * collect
+  * saveAsTextFile
+  * foreach
+  * foreachPartiton
+  *
+  * 其余方法是transformation方法
+  *   特点：lazy的，生成新的RDD或RDDPair,不会立即执行得到结果
+  */
 object SparkRDD {
   //指定分区的方式local[n],n是几，分区就是几个。local[*]表示通过cpu核数得到相同的分区数
   //sc.parallelize(list，n)n是几，分区就是几个
@@ -20,6 +31,7 @@ object SparkRDD {
   def main(args: Array[String]): Unit = {
     /*mapdm
     flatMapdm
+    flatMapValuesdm
     mapPartitionsdm
     mapPartitionsWithIndexdm
 
@@ -36,6 +48,7 @@ object SparkRDD {
     cartesiandm
 
     filterdm
+    filterByRangedm
     distinctdm
     intersectiondm
 
@@ -44,23 +57,76 @@ object SparkRDD {
     repartitionAndSortWithinPartitionsdm
 
     sortByKeydn
-    aggregateByKeydm*/
+    aggregatedm
 
-    rdd.top(3).foreach(println)//排序取最前三个
+
+    rdd.top(3).foreach(println) //排序取最前三个
     rdd.take(3).foreach(println) //取list的前三个
     rdd.takeOrdered(3).foreach(println) //排序取最前三个
+    aggregateByKeydm
+
+    countBy
+    foldByKeydm*/
+
+  }
+
+  //foldByKey折叠聚合，与reduceByKey不同的是它含有初始值
+  //foldByKey,reduceByKey,combineByKey,aggregateByKey底层都是调用combineByKeyWithClassTag
+  def foldByKeydm = {
+    val list5 = List((1, "a"), (2, "b"), (3, "c"), (1, "d"))
+    val rdd5 = sc.parallelize(list5)
+    //foldByKeydm
+    rdd5.foldByKey("")(_+_).foreach(println)
+  }
+
+  //countBy求总数
+  def countBy = {
+    val list5 = List((1, "a"), (2, "b"), (3, "c"), (1, "d"))
+    val rdd5 = sc.parallelize(list5)
+    //整体相同的个数(1, "a")->1个，(2, "b")->1个..
+    rdd5.countByValue().foreach(println)
+    //key相同的个数1->2个，2->1个..
+    rdd5.countByKey().foreach(println)
+  }
+
+  //aggregate对rdd聚合操作
+  def aggregatedm = {
+    //（1，2，3）->1+2+3=6  (4,5)->4+5=9  6+9=15
+    var i = rdd1.aggregate(0)(_ + _, _ + _)
+    println(i)
+    //多个分区，每个分区内部聚合使用一次初始值，分区间聚合时又使用一次初始值
+    //（1，1，2，3）->1+1+2+3=7  (1,4,5)->1+4+5=10  1+7+10=18
+    i = rdd1.aggregate(1)(_ + _, _ + _)
+    println(i)
+    //求每个分区的最大值再求和
+    //（1，2，3）->3  (4,5)->5  3+5=8
+    i = rdd1.aggregate(0)(math.max(_, _), _ + _)
+    println(i)
+    //求每个分区的最大值再求和,有初始值时，分区内操作会使用，分区间操作也会使用
+    //（4，1，2，3）->4  (4,4,5)->5  4+4+5=13
+    i = rdd1.aggregate(4)(math.max(_, _), _ + _)
+    println(i)
+
+    val str = rdd.aggregate("")(_ + _, _ + _)
+    println(str)
+    //多个分区，每个分区内部聚合使用一次初始值，分区间聚合时又使用一次初始值
+    val str1 = rdd.aggregate("|")(_ + _, _ + _)
+    println(str1)
   }
 
   //aggregateByKey函数对PairRDD中相同Key的值进行聚合操作，在聚合过程中同样使用了一个中立的初始值
   //第一个_+_为本分区内的聚合操作，初始值为第一个_的值
-  //第二个_+_为分区间的聚合操作，初始值为第一个_的值
-  //如果分区数>1时，初始值就被使用了多次（每个分区内，分区间的聚合）
-  def aggregateByKeydm={
-    rdd.map((_,1)).aggregateByKey(1)(_+_,_+_).foreach(println)
+  //第二个_+_为分区间的聚合操作，初始值不会被使用
+  //如果分区数>1时，初始值就被使用了多次（每个分区内）
+  def aggregateByKeydm = {
+    //分两个区：[("tom"，1),("davy"，1)],[("lucy",1),("tom",1)]
+    //[("tom"，1+1=2),("davy"，1+1=2)],[("lucy",1+1=2),("tom",1+1=2)]
+    //[("tom"，2+2=4),("davy"，2),("lucy",2)]
+    rdd.map((_, 1)).aggregateByKey(1)(_ + _, _ + _).foreach(println)
   }
 
   //sortByKey函数作用于Key-Value形式的RDD
-  def sortByKeydn={
+  def sortByKeydn = {
     //zip也可以用于rdd操作，但是与scala-zip不同的是两个rdd长度要是一致的
     //传参true：升序，false:降序
     rdd.zip(rdd2).sortByKey(true).foreach(println)
@@ -107,6 +173,13 @@ object SparkRDD {
   def filterdm = {
     //rdd1.filter(_ % 2 == 0).foreach(print)
     rdd1.filter(x => x % 2 == 0).foreach(print)
+  }
+
+  //filterByRange通过key的范围对数据进行过滤
+  def filterByRangedm = {
+    val list5 = List((1, "a"), (2, "b"), (3, "c"), (1, "d"))
+    val rdd5 = sc.parallelize(list5)
+    rdd5.filterByRange(1, 2).foreach(print)
   }
 
   //cartesian是用于求笛卡尔积的
@@ -212,6 +285,14 @@ object SparkRDD {
   def flatMapdm[T](implicit rdd: RDD[T]) = {
     //flatMap
     val flatMaps = rdd.flatMap(line => (line + " Hello").split(" "))
+    flatMaps.foreach(println)
+  }
+
+  def flatMapValuesdm[T](implicit rdd: RDD[T]) = {
+    val list5 = List((1, "a b"), (2, "b c"), (3, "c d"), (1, "d e"))
+    val rdd5 = sc.parallelize(list5)
+    //flatMapValues对value分割
+    val flatMaps = rdd5.flatMapValues(line => line.split(" "))//->(1, "a b")-> (1,a),(1,b)
     flatMaps.foreach(println)
   }
 
