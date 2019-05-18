@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * action方法，会立即发task执行,在worker(executor)端执行(结果也在executor中),如下
   * aggregate
-  * collect
+  * collect 把结果搜集到driver端(一般top,count,take之类的方法会收集)
   * saveAsTextFile
   * foreach
   * foreachPartiton
