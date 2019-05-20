@@ -1,5 +1,6 @@
 package demo
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
@@ -18,13 +19,18 @@ object SparkTeacher {
     })
 
     //2.求每个学科中最受欢迎老师的top3 用.分割要转义"\\"或者"[.]"
-    rdd.map(x => (x.split("//")(1).split("\\.")(0) + "@" + x.split("//")(1).split("/")(1), 1)).reduceByKey(_ + _).sortBy(_._2, false)
-      .map(x => (x._1.split("@")(0), (x._1.split("@")(1), x._2))).groupByKey()
-      .foreach(x => {
-        var it = x._2.iterator.take(3)
+    val maps: RDD[((String, String), Int)] = rdd.map(x => ((x.split("//")(1).split("\\.")(0), x.split("//")(1).split("/")(1)), 1))
+    //分组聚合
+    val groups: RDD[(String, Iterable[((String, String), Int)])] = maps.reduceByKey(_ + _).groupBy(_._1._1)
+    //组内求topn，mapValues对值进行操作，x => x.toList.sortBy(_._2).reverse.take(3)为scala的方法
+    val topn: RDD[(String, List[((String, String), Int)])] = groups.mapValues(x => x.toList.sortBy(_._2).reverse.take(3))
+    //打印输出结果
+    //topn.foreach(println)
+    topn.foreach(x => {
+        var it = x._2.iterator
         while (it.hasNext) {
           val x2 = it.next()
-          print(x._1 + ":" + x2._1 + "->" + x2._2+";")
+          print(x._1 + ":" + x2._1._2 + "->" + x2._2+";")
         }
         println
       })
