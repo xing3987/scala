@@ -70,6 +70,8 @@ object SparkTeacher {
     val subSorted: RDD[((String, String), Int)] = subReduced.mapPartitions(it => {
       //将迭代器转换成list，然后排序，在转换成迭代器返回
       it.toList.sortBy(_._2).reverse.take(3).iterator
+
+      //为了不一次加载到内存，也可以使用长度为5的一个可以排序的集合，然后一个个it.next()取值对比
     })
     val results: Array[((String, String), Int)] = subSorted.collect()
     println(results.toBuffer)
