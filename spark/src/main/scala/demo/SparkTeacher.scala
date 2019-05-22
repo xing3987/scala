@@ -1,7 +1,9 @@
 package demo
 
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.{Partitioner, SparkConf, SparkContext}
+
+import scala.collection.mutable
 
 /**
   * 求最受欢迎的老师，多个task要先collect到driver上再输出
@@ -51,7 +53,48 @@ object SparkTeacher {
 
     //方法2和3对比
     //当数据量小时，使用方法2，只需要一次action就可以得到结论；当数据量大时使用方法3，内存不会溢出
-    
+
+    //4.使用自定义分区器
+    val subPa = new SubjectParitioner(subjects)
+    val partitioned: RDD[((String, String), Int)] = reduced.partitionBy(subPa)
+    //如果一次拿出一个分区(可以操作一个分区中的数据了)
+    val sorted: RDD[((String, String), Int)] = partitioned.mapPartitions(it => {
+      //将迭代器转换成list，然后排序，在转换成迭代器返回
+      it.toList.sortBy(_._2).reverse.take(3).iterator
+    })
+    val r: Array[((String, String), Int)] = sorted.collect()
+    println(r.toBuffer)
+
+    //5.直接在reduce阶段使用自定义分区器
+    val subReduced: RDD[((String, String), Int)] = rdd.map(x => ((x.split("//")(1).split("\\.")(0), x.split("//")(1).split("/")(1)), 1)).reduceByKey(subPa, _ + _)
+    val subSorted: RDD[((String, String), Int)] = subReduced.mapPartitions(it => {
+      //将迭代器转换成list，然后排序，在转换成迭代器返回
+      it.toList.sortBy(_._2).reverse.take(3).iterator
+    })
+    val results: Array[((String, String), Int)] = subSorted.collect()
+    println(results.toBuffer)
+
     sc.stop()
   }
+}
+
+class SubjectParitioner(subjects: Array[String]) extends Partitioner {
+  //初始化subject对应的分区号
+  val rules = new mutable.HashMap[String, Int]()
+  var i = 0
+  for (subject <- subjects) {
+    rules.put(subject, i)
+    i = i + 1
+  }
+
+  //返回分区总数
+  override def numPartitions: Int = subjects.length
+
+  override def getPartition(key: Any): Int = {
+    //获取学科名称 因为已知传来的key是(String,String)类型的，所以使用强转
+    val subject = key.asInstanceOf[(String, String)]._1
+    //根据规则计算分区编号
+    rules(subject)
+  }
+
 }
