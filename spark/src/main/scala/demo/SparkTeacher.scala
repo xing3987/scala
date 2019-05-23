@@ -46,9 +46,24 @@ object SparkTeacher {
     //    reduced.filter(_._1._1 == "bigdata").sortBy(_._2, false).take(3).foreach(println) //求bigdata最受欢迎的老师
     //求出所有的学科
     val subjects: Array[String] = rdd.map(_.split("//")(1).split("\\.")(0)).distinct().collect
-    //分别过滤求每个学科最受欢迎的top3 多个学科多次shuffle,多次计算
+    //分别过滤求每个学科最受欢迎的top3 多个学科多次shuffle,多次计算，可以把数据放到内存中，加快运行速度
+    val cached: RDD[((String, String), Int)] = reduced.cache()
+    /*
+    //或者指定储存方式
+    reduced.persist(StorageLevel.DISK_ONLY) //默认只放在内存中
+    StorageLevel.DISK_ONLY 放于磁盘中
+    StorageLevel.DISK_ONLY_2 放于磁盘中并存两份
+    StorageLevel.MEMORY_ONLY
+    StorageLevel.MEMORY_ONLY_2
+    StorageLevel.MEMORY_ONLY_SER 序列化放于内存中
+    StorageLevel.MEMORY_ONLY_SER_2
+    StorageLevel.MEMORY_AND_DISK
+    StorageLevel.MEMORY_AND_DISK_2
+    StorageLevel.MEMORY_AND_DISK_SER
+    StorageLevel.MEMORY_AND_DISK_SER_2
+    */
     for (subject <- subjects) {
-      reduced.filter(_._1._1 == subject).sortBy(_._2, false).take(3).foreach(println)
+      cached.filter(_._1._1 == subject).sortBy(_._2, false).take(3).foreach(println)
     }
 
     //方法2和3对比
