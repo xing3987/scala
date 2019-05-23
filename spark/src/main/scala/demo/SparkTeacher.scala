@@ -63,8 +63,21 @@ object SparkTeacher {
     StorageLevel.MEMORY_AND_DISK_SER_2
     */
     for (subject <- subjects) {
+      //reduced.filter(_._1._1 == subject).sortBy(_._2, false).take(3).foreach(println)
       cached.filter(_._1._1 == subject).sortBy(_._2, false).take(3).foreach(println)
     }
+    cached.unpersist() //释放缓存
+
+ /*
+    //或者使用checkpoint保存中间结果到磁盘中,以后就可以从备份的数据开始计算
+    sc.setCheckpointDir("G:\\logs\\teacher_checkpoint")
+    reduced.checkpoint()
+    for (subject <- subjects) {
+      reduced.filter(_._1._1 == subject).sortBy(_._2, false).take(3).foreach(println)
+    }
+*/
+    //有cache时优先从cache中读取数据，没有才从checkpoint中读取，所以cache优先级别更高！！
+
 
     //方法2和3对比
     //当数据量小时，使用方法2，只需要一次action就可以得到结论；当数据量大时使用方法3，内存不会溢出
