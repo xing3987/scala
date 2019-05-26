@@ -51,6 +51,13 @@
             <version>${hadoop.version}</version>
         </dependency>
 
+        <!-- mysql的连接驱动依赖 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.38</version>
+        </dependency>
+
     </dependencies>
 
     <build>

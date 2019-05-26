@@ -1,5 +1,7 @@
 package iplocation
 
+import java.sql.{Connection, DriverManager, PreparedStatement}
+
 import scala.io.{BufferedSource, Source}
 
 object MyUtils {
@@ -47,6 +49,19 @@ object MyUtils {
       else return middle
     }
     -1
+  }
+
+  //定义插入数据库的方法
+  def data2Mysql(pa: Iterator[(String, Int)]) = {
+    val conn: Connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bigdata?characterEncoding=UTF-8", "root", "root")
+    val pstm: PreparedStatement = conn.prepareStatement("insert into ip_province_count(province,count) values(?,?)")
+    pa.foreach(tp => {
+      pstm.setString(1, tp._1)
+      pstm.setInt(2, tp._2)
+      pstm.executeUpdate()
+    })
+    if (pstm != null) pstm.close()
+    if (conn != null) conn.close()
   }
 
   def main(args: Array[String]): Unit = {
