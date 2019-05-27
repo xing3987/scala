@@ -25,7 +25,7 @@ object Ip2Location2 {
     })
     //收集到driver端
     val collected: Array[(Long, Long, String)] = tuples.collect
-
+    //如果广播的变量需要实时的改变，可以放到redis集群中
     val broadRef: Broadcast[Array[(Long, Long, String)]] = sc.broadcast(collected)
 
     //创建RDD，读取目标日志文件
