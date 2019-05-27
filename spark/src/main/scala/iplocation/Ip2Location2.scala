@@ -60,6 +60,7 @@ object Ip2Location2 {
     */
 
     //当数据量大时，需要建立多个conn，占领大量内存。优化：以分区为单位建立连接,因为每个分区会在一个worker上，所以只要建立一个连接
+    //把建立连接的方法放入object！！(不要放到class)中，会在executor中初始化，并且是单例的会放入内存中，共同使用
     reduced.foreachPartition(MyUtils.data2Mysql _)
 
     sc.stop()
