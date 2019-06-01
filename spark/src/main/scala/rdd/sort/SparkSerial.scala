@@ -16,7 +16,7 @@ object SparkSerial {
     val lines: RDD[String] = sc.parallelize(list)
     val maped: RDD[(Long, String, String, String)] = lines.map(line => {
       val words: Array[String] = line.split(" ")
-      (MyUtils.parse(words(0)), words(1), words(2), words(3))
+      (MyUtils2.parse(words(0)), words(1), words(2), words(3))
     })
     val sorted: RDD[(Long, String, String, String)] = maped.sortBy(tp => (tp._1))
     println(sorted.collect.toBuffer)
@@ -24,7 +24,7 @@ object SparkSerial {
   }
 }
 
-object MyUtils {
+object MyUtils2 {
 
   //在executor中使用格式化日期，是多线程的所以不能使用SimpleDateFormat,会报格式化错误
   //可以使用读写锁，或者使用FastDateFormat
