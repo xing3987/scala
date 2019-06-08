@@ -16,7 +16,7 @@ object HiveOnSpark {
     val df: DataFrame = spark.sql("select * from access")
     df.show()
 
-    spark.sql("create table t_boy(id long,name string,age int)")
+    //spark.sql("create table t_boy(id long,name string,age int)")
     val df2: DataFrame = spark.sql("desc t_boy")
     df2.show()
 
