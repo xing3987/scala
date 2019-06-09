@@ -28,7 +28,7 @@ object Ip2LocationSQL {
     val ddIP: DataFrame = aims.map(aim => {
       val ip: String = aim.split("\\|")(1)
       MyUtils.ip2Long(ip)
-    }).toDF("ip")
+    }).toDF("data/ip")
 
     //分别创建视图并写sql->join查询
     rule.createTempView("rule")
