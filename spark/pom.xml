@@ -93,6 +93,13 @@
             <version>${spark.version}</version>
         </dependency>
 
+        <!-- spark整合redis的依赖 -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
