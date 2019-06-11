@@ -93,6 +93,12 @@
             <version>${spark.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
         <!-- spark整合redis的依赖 -->
         <dependency>
             <groupId>redis.clients</groupId>

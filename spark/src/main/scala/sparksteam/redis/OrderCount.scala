@@ -38,7 +38,7 @@ object OrderCount {
 
     //准备kafka的参数
     val kafkaParams = Map(
-      //"deserializer.encoding" -> "GB2312", //配置读取Kafka中数据的编码
+      //"deserializer.encoding" -> "GB2312", //配置读取Kafka中数据的编码默认“utf-8”
       "metadata.broker.list" -> brokerList,
       "group.id" -> groupId,
       //从头开始读取数据
