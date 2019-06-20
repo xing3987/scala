@@ -106,6 +106,13 @@
             <version>2.9.0</version>
         </dependency>
 
+        <!-- spark整合mongodb的依赖 -->
+        <dependency>
+            <groupId>org.mongodb.spark</groupId>
+            <artifactId>mongo-spark-connector_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
