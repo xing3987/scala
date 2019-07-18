@@ -30,7 +30,7 @@ object WorldCount {
     //排序
     val sorted = reduced.sortBy(_._2, false)
     //打印输出到控制台
-    sorted.foreach(println)
+    sorted.collect().foreach(println)
     //将结果保存到目标文件中
     // sorted.saveAsTextFile(args(1))
     //释放资源
