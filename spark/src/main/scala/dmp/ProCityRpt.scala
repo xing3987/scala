@@ -1,8 +1,11 @@
 package dmp
 
 
+import java.util.Properties
+
+import com.typesafe.config.ConfigFactory
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 /**
   * 统计各个省市的数据数量
@@ -25,7 +28,7 @@ object ProCityRpt {
 
     val df: DataFrame = session.read.parquet(args(0))
     df.createTempView("datas")
-    val frame: DataFrame = session.sql("select province,city,count(*) from datas group by province,city")
+    val frame: DataFrame = session.sql("select province,city,count(*) count from datas group by province,city")
     frame.show()
 
     //使用hadoop的文件管理api，判断输出目录是否存在
@@ -35,6 +38,15 @@ object ProCityRpt {
     if (fs.exists(path)) {
       fs.delete(path, true)
     }
+
+    //保存到mysql
+    //加载配置文件：application.conf ->application.json->application.properties
+    val config = ConfigFactory.load()
+    val properties = new Properties()
+    properties.setProperty("user",config.getString("jdbc.user"))
+    properties.setProperty("password",config.getString("jdbc.password"))
+    //SaveMode保存格式，覆盖追加等
+    frame.write.mode(SaveMode.Overwrite).jdbc(config.getString("jdbc.url"),"ip_city_count",properties)
 
     frame.coalesce(1).write.json(args(1)) //coalesce合并分区
     session.stop()
