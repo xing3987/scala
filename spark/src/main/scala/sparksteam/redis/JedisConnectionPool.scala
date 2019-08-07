@@ -15,7 +15,7 @@ object JedisConnectionPool {
   //当调用borrow Object方法时，是否进行有效性检查
   config.setTestOnBorrow(true)
   //建立连接池：10000代表超时时间（10秒）
-  private val pool = new JedisPool(config, "hadoop003", 6379, 10000, "root")
+  private val pool = new JedisPool(config, "hadoop003", 6379, 10000, "root", 2) //最后一个参数为redis的数据库
 
   //获取一个redis连接
   def getConnection(): Jedis = {

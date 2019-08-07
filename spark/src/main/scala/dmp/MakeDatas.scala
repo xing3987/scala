@@ -6,7 +6,9 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
 import rdd.iplocation.MyUtils
-
+import sparksteam.redis.JedisConnectionPool
+import org.apache.commons.lang3
+import org.apache.commons.lang3.SerializationUtils
 
 object MakeDatas {
   def main(args: Array[String]): Unit = {
@@ -29,9 +31,12 @@ object MakeDatas {
 
     //把Ip规则加载到driver端的内存中
     val tuples: Array[(Long, Long, String)] = MyUtils.readRules(args(0))
+    //*************使用redis保存数据序列化数据************
+    val jedis = JedisConnectionPool.getConnection()
+    jedis.set("turple".getBytes,SerializationUtils.serialize(tuples))
 
     //广播ip规则到executor中
-    val broadRef: Broadcast[Array[(Long, Long, String)]] = sc.broadcast(tuples)
+    //val broadRef: Broadcast[Array[(Long, Long, String)]] = sc.broadcast(tuples)
 
     import session.implicits._
     //创建RDD，读取目标日志文件
@@ -41,7 +46,12 @@ object MakeDatas {
       val times = fields(0)
       val ip = fields(1) //获得ip数据
       val ipLong: Long = MyUtils.ip2Long(ip) //把ip转换成long格式
-      val rulesInExecutor: Array[(Long, Long, String)] = broadRef.value //获得广播的规则变量
+      //val rulesInExecutor: Array[(Long, Long, String)] = broadRef.value //获得广播的规则变量
+      //************从redis中获取对象并反序列化**************
+      val bytes: Array[Byte] = jedis.get("turple".getBytes())
+      val rulesInExecutor: (Array[(Long, Long, String)]) = SerializationUtils.deserialize(bytes)
+
+
       val index: Int = MyUtils.binarySearch(rulesInExecutor, ipLong)
       var province: String = " : "
       if (index != -1) province = rulesInExecutor(index)._3 //复制查询到的省市

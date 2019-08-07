@@ -25,7 +25,7 @@ object TypeIndex {
     val rdd: RDD[String] = sc.textFile(args(1))
 
     val result = rdd.map(line => {
-      val fields = line.split("\t")
+      val fields = line.split("\t",-1)
       val id: String = fields(0)
       val types: String = fields(1)
       val type1 = types.split("[|]")(0)
