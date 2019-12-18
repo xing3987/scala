@@ -45,6 +45,6 @@ object ArrayDemo2 {
     //yield迭代器
     var datas = for (i <- 1 to 3; j <- 1 to 3; if i != j) yield 10 * i + j
     println("datas:", datas)
-
+    for (i <- datas) print(i + " ")
   }
 }
